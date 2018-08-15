@@ -10,7 +10,7 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      path: '/',
+      path: '/lawCasesPage',
       name: 'LawCasesPage',
       component: LawCasesPage
     },

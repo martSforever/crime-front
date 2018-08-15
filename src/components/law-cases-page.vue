@@ -8,7 +8,7 @@
   export default {
     name: "law-cases-page",
     mounted() {
-      this.$router.push('login')
+      // this.$router.push('login')
     },
   }
 </script>

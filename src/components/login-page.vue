@@ -39,7 +39,7 @@
       }
     },
     methods: {
-      handleLogin() {
+      async handleLogin() {
         if (!this.loginData.userName) {
           showMessage('username is illegal!')
           return
@@ -47,6 +47,17 @@
         if (!this.loginData.password) {
           showMessage('password is illegal!')
           return
+        }
+
+        let ret = await this.$http.post('person/login', this.loginData)
+        console.log(ret)
+        if (!!ret && !!ret.success) {
+          showMessage('login successful!')
+          setTimeout(() => {
+            this.$router.push('lawCasesPage')
+          }, 1000)
+        } else {
+          showMessage('login failed, username or password is incorrect!')
         }
       },
       async handleRegistry() {
