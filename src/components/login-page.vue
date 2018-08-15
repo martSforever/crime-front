@@ -3,15 +3,15 @@
     <transition name="fade-in" mode="out-in">
       <div class="login-wrapper" v-if="mode === 'login'" key="1">
         <el-input placeholder="username" v-model="loginData.userName"></el-input>
-        <el-input placeholder="password" v-model="loginData.password"></el-input>
+        <el-input placeholder="password" v-model="loginData.password" type="password"></el-input>
         <el-button type="success" @click="handleLogin">login</el-button>
         <span class="registry-btn" @click="mode='registry'">registry</span>
       </div>
 
       <div class="login-wrapper" v-if="mode === 'registry'" key="2">
         <el-input placeholder="username" v-model="registryData.userName"></el-input>
-        <el-input placeholder="password" v-model="registryData.password"></el-input>
-        <el-input placeholder="confirm password" v-model="registryData.confirmPassword"></el-input>
+        <el-input placeholder="password" v-model="registryData.password" type="password"></el-input>
+        <el-input placeholder="confirm password" v-model="registryData.confirmPassword" type="password"></el-input>
         <el-button type="success" @click="handleRegistry">registry</el-button>
         <span class="return-to-btn" @click="mode='login'">return to login</span>
       </div>
@@ -20,6 +20,8 @@
 </template>
 
 <script>
+  import {showMessage} from "../common/message";
+
   export default {
     name: "login-page",
     data() {
@@ -39,30 +41,35 @@
     methods: {
       handleLogin() {
         if (!this.loginData.userName) {
-          this.$message("username is illegal!");
+          showMessage('username is illegal!')
           return
         }
         if (!this.loginData.password) {
-          this.$message('password is illegal!');
+          showMessage('password is illegal!')
           return
         }
       },
       async handleRegistry() {
         if (!this.registryData.userName) {
-          this.$message("username is illegal!");
+          showMessage("username is illegal!")
           return
         }
         if (!this.registryData.password) {
-          this.$message('password is illegal!');
+          showMessage('password is illegal!')
           return
         }
         if (this.registryData.password !== this.registryData.confirmPassword) {
-          this.$message('password and confirm password does not match!');
+          showMessage("password and confirm password does not match!")
           return
         }
 
         let ret = await this.$http.post('person/upsert', this.registryData)
-        console.log(ret)
+        if (!!ret) {
+          showMessage("registry successful!")
+          this.mode = 'login'
+          this.loginData.userName = this.registryData.userName
+          this.loginData.password = this.registryData.password
+        }
       },
     }
   }
