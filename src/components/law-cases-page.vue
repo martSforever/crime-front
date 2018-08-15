@@ -1,14 +1,30 @@
 <template>
   <div class="law-cases-page">
     案例列表
+    {{userInfo}}--
+    {{loginTime}}
   </div>
 </template>
 
 <script>
+
+  import {getModuleStore} from "../common/store";
+  import CONST from "../common/const";
+  import {showMessage} from "../common/message";
+
+  const {mapGetters} = getModuleStore("person")
+
   export default {
     name: "law-cases-page",
     mounted() {
-      // this.$router.push('login')
+      console.log(this.loginTime + CONST.loginValidTime, new Date().getTime())
+      if ((this.loginTime + CONST.loginValidTime) < new Date().getTime()) {
+        showMessage('session timeout!')
+        this.$router.push('login')
+      }
+    },
+    computed: {
+      ...mapGetters(['userInfo', 'loginTime'])
     },
   }
 </script>

@@ -21,7 +21,9 @@
 
 <script>
   import {showMessage} from "../common/message";
+  import {getModuleStore} from "../common/store";
 
+  const {mapMutations, mapGetters} = getModuleStore('person')
   export default {
     name: "login-page",
     data() {
@@ -38,6 +40,12 @@
         },
       }
     },
+    computed: {
+      ...mapGetters(['userInfo']),
+    },
+    mounted() {
+      this.loginData.userName = this.userInfo.userName
+    },
     methods: {
       async handleLogin() {
         if (!this.loginData.userName) {
@@ -53,6 +61,8 @@
         console.log(ret)
         if (!!ret && !!ret.success) {
           showMessage('login successful!')
+          this.setUserInfo(ret.result)
+          this.setLoginTime(new Date().getTime())
           setTimeout(() => {
             this.$router.push('lawCasesPage')
           }, 1000)
@@ -82,6 +92,9 @@
           this.loginData.password = this.registryData.password
         }
       },
+      ...mapMutations([
+        'setUserInfo', 'setLoginTime'
+      ])
     }
   }
 </script>
