@@ -63,11 +63,15 @@
       },
 
       async list() {
+        this.startLoading()
         let resp = await axios.get(`http://127.0.0.1:8081/student/list`)
+        this.stopLoading()
         this.students = resp.data
       },
       async insert() {
+        this.startLoading()
         let resp = await axios.post(`http://127.0.0.1:8081/student/upsert`, this.student);
+        this.stopLoading()
         if (!!resp.data) {
           this.$message('保存成功!');
           this.list()
@@ -78,11 +82,26 @@
           this.$message('请选择要删除的额数据!');
           return
         }
+        this.startLoading()
         let resp = await axios.post(`http://127.0.0.1:8081/student/delete`, this.currentRow)
+        this.stopLoading()
         if (!!resp.data) {
           this.$message('删除成功!');
           this.list()
         }
+      },
+
+
+      startLoading() {
+        this.loading = this.$loading({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
+      },
+      stopLoading() {
+        this.loading.close()
       },
     },
     mounted() {
