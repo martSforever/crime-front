@@ -44,7 +44,7 @@
       ...mapGetters(['userInfo']),
     },
     mounted() {
-      this.loginData.userName = this.userInfo.userName
+      this.loginData.userName = !!this.userInfo ? this.userInfo.userName : ''
     },
     methods: {
       async handleLogin() {
