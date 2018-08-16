@@ -89,7 +89,9 @@
       if ((this.loginTime + CONST.loginValidTime) < new Date().getTime()) {
         showMessage('session timeout!')
         this.$router.push('login')
+        return
       }
+      this.loadLawCases()
     },
     computed: {
       ...mapGetters(['userInfo', 'loginTime'])
@@ -131,9 +133,6 @@
           this.loadLawCases()
         }
       },
-    },
-    mounted() {
-      this.loadLawCases()
     },
   }
 </script>

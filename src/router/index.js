@@ -10,6 +10,10 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
+      path: '/',
+      redirect: '/lawCasesPage'
+    },
+    {
       path: '/lawCasesPage',
       name: 'LawCasesPage',
       component: LawCasesPage
