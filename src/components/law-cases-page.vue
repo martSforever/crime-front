@@ -61,8 +61,11 @@
     >
       <div class="add-case-content-wrapper">
         <el-input placeholder="type" v-model="addLawCase.type"></el-input>
-        <el-input placeholder="time" :value="addLawCase.time"
-                  :disabled="true"></el-input>
+        <el-date-picker
+          v-model="addLawCase.time"
+          type="date"
+          placeholder="date">
+        </el-date-picker>
         <el-input placeholder="location" v-model="addLawCase.location"></el-input>
         <el-input placeholder="evidence" v-model="addLawCase.evidence"></el-input>
         <el-input placeholder="description" v-model="addLawCase.description"></el-input>
@@ -182,6 +185,9 @@
 
     .add-case-content-wrapper > * {
       margin-bottom: 12px;
+      &.el-input {
+        width: 100%;
+      }
     }
   }
 </style>
