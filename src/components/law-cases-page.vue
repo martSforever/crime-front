@@ -1,9 +1,18 @@
 <template>
   <div class="law-cases-page">
     <div class="content-wrapper">
+      <div class="header">
+        <el-dropdown>
+          <div class="user-info">
+            Welcome {{userInfo.userName}} <i class="el-icon-caret-bottom"></i>
+          </div>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item><span @click="handleLogout">logout</span></el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
       <el-button @click="openAddCaseDialog">add case</el-button>
       <el-button @click="handleDelete">delete case</el-button>
-
       <div>
         <el-table
           :data="lawCases"
@@ -72,7 +81,7 @@
   import CONST from "../common/const";
   import {showMessage} from "../common/message";
 
-  const {mapGetters} = getModuleStore("person")
+  const {mapMutations, mapGetters} = getModuleStore('person')
 
   export default {
     name: "law-cases-page",
@@ -97,6 +106,9 @@
       ...mapGetters(['userInfo', 'loginTime'])
     },
     methods: {
+      ...mapMutations([
+        'setUserInfo', 'setLoginTime'
+      ]),
       openAddCaseDialog() {
         console.log(new Date().yyyyMMdd())
         this.addLawCase = {
@@ -109,7 +121,7 @@
       },
       async handleClickSubmitAddLawCase() {
         let ret = await this.$http.post('lawCase/upsert', this.addLawCase)
-        if (!!ret) {
+        if (!!ret && !!ret.success) {
           showMessage("create successful!")
           this.loadLawCases()
           this.dialogVisible = false
@@ -117,8 +129,8 @@
       },
       async loadLawCases() {
         let ret = await this.$http.post('lawCase/queryAll')
-        if (!!ret) {
-          this.lawCases = ret
+        if (!!ret && !!ret.success) {
+          this.lawCases = ret.result
         }
         this.currentRow = null
       },
@@ -128,10 +140,16 @@
           return
         }
         let ret = await this.$http.post('lawCase/delete', this.currentRow)
-        if (!!ret) {
+        if (!!ret && !!ret.success) {
           showMessage('delete successful!')
           this.loadLawCases()
         }
+      },
+      async handleLogout() {
+        console.log('login')
+        this.setUserInfo({})
+        this.setLoginTime(null)
+        this.$router.push('/login')
       },
     },
   }
@@ -145,8 +163,18 @@
     align-items: center;
     justify-content: center;
     padding-bottom: 10vh;
+    .header {
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      .user-info {
+        color: dodgerblue;
+        cursor: pointer;
+      }
+    }
     .content-wrapper {
-      height: 700px;
+      height: 70vh;
       width: 1200px;
       box-shadow: 0 0 40px 10px #f2f2f2;
       padding: 24px;

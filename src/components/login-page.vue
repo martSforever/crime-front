@@ -84,8 +84,8 @@
           return
         }
 
-        let ret = await this.$http.post('person/upsert', this.registryData)
-        if (!!ret) {
+        let ret = await this.$http.post('person/register', this.registryData)
+        if (!!ret && !!ret.success) {
           showMessage("registry successful!")
           this.mode = 'login'
           this.loginData.userName = this.registryData.userName
